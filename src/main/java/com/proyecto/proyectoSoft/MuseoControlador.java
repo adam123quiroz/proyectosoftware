@@ -38,9 +38,7 @@ public class MuseoControlador {
     Resources<Resource<Museo>> all() {
 
         List<Resource<Museo>> museos = museoRepositorio.findAll().stream()
-                .map(employee -> new Resource<>(employee,
-                        linkTo(methodOn(MuseoControlador.class).one(employee.getId())).withSelfRel(),
-                        linkTo(methodOn(MuseoControlador.class).all()).withRel("employees")))
+                .map(ensamblador :: toResource)
                 .collect(Collectors.toList());
 
         return new Resources<>(museos,
