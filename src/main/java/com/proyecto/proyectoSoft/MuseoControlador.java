@@ -45,9 +45,18 @@ public class MuseoControlador {
                 linkTo(methodOn(MuseoControlador.class).all()).withSelfRel());
     }
 
+//    @PostMapping("/museos")
+//    Museo nuevoMuseo(@RequestBody Museo nuevoMuseo) {
+//        return museoRepositorio.save(nuevoMuseo);
+//    }
     @PostMapping("/museos")
-    Museo nuevoMuseo(@RequestBody Museo nuevoMuseo) {
-        return museoRepositorio.save(nuevoMuseo);
+    ResponseEntity<?> nuevoMuseo(@RequestBody Museo museo) throws URISyntaxException {
+
+        Resource<Museo> resource = ensamblador.toResource(museoRepositorio.save(museo));
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
     }
 
 
@@ -57,8 +66,8 @@ public class MuseoControlador {
 //        return museoRepositorio.findById(id)
 //                .orElseThrow(() -> new MuseoNotFoundException(id));
 //    }
-    @GetMapping("/employees/{id}")
-    Resource<Museo> one(@PathVariable Long id) {
+    @GetMapping("/museos/{id}")
+    Resource<Museo> obtenerMuseoPorId(@PathVariable Long id) {
 
         Museo museo = museoRepositorio.findById(id)
                 .orElseThrow(() -> new MuseoNotFoundException(id));
@@ -66,24 +75,50 @@ public class MuseoControlador {
         return ensamblador.toResource(museo);
     }
 
+//    @PutMapping("/museos/{id}")
+//    Museo replaceEmployee(@RequestBody Museo nuevoMuseo, @PathVariable Long id) {
+//
+//        return museoRepositorio.findById(id)
+//                .map(museo -> {
+//                    museo.setDireccion(nuevoMuseo.getDireccion());
+//                    museo.setNombre(nuevoMuseo.getNombre());
+//                    return museoRepositorio.save(museo);
+//                })
+//                .orElseGet(() -> {
+//                    nuevoMuseo.setId(id);
+//                    return museoRepositorio.save(nuevoMuseo);
+//                });
+//    }
     @PutMapping("/museos/{id}")
-    Museo replaceEmployee(@RequestBody Museo nuevoMuseo, @PathVariable Long id) {
+    ResponseEntity<?> remplazarMuseo(@RequestBody Museo nuevoMuseo, @PathVariable Long id) throws URISyntaxException {
 
-        return museoRepositorio.findById(id)
+        Museo updatedEmployee = museoRepositorio.findById(id)
                 .map(museo -> {
-                    museo.setDireccion(nuevoMuseo.getDireccion());
-                    museo.setNombre(nuevoMuseo.getNombre());
+                    museo.setDireccion(museo.getDireccion());
+                    museo.setNombre(museo.getNombre());
                     return museoRepositorio.save(museo);
                 })
                 .orElseGet(() -> {
                     nuevoMuseo.setId(id);
                     return museoRepositorio.save(nuevoMuseo);
                 });
-    }
 
-    @DeleteMapping("/employees/{id}")
-    void deleteEmployee(@PathVariable Long id) {
+        Resource<Museo> resource = ensamblador.toResource(updatedEmployee);
+
+        return ResponseEntity
+                .created(new URI(resource.getId().expand().getHref()))
+                .body(resource);
+    }
+//    @DeleteMapping("/employees/{id}")
+//    void deleteEmployee(@PathVariable Long id) {
+//        museoRepositorio.deleteById(id);
+//    }
+    @DeleteMapping("/museos/{id}")
+    ResponseEntity<?> eliminarMuseo(@PathVariable Long id) {
+
         museoRepositorio.deleteById(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 }
