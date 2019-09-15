@@ -1,13 +1,10 @@
 package com.proyecto.proyectoSoft;
 
-
-import lombok.Data;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Data
+
 @Entity
 public class Museo {
     private @Id @GeneratedValue Long id;
@@ -18,6 +15,30 @@ public class Museo {
 
     public Museo(String direccion, String nombre) {
         this.direccion = direccion;
+        this.nombre = nombre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 }

@@ -30,95 +30,95 @@ public class MuseoControlador {
         this.museoRepositorio = museoRepositorio;
         this.ensamblador = ensamblador;
     }
-//    @GetMapping("/museos")
-//    List<Museo> all(){
-//        return museoRepositorio.findAll();
-//    }
     @GetMapping("/museos")
-    Resources<Resource<Museo>> all() {
-
-        List<Resource<Museo>> museos = museoRepositorio.findAll().stream()
-                .map(ensamblador :: toResource)
-                .collect(Collectors.toList());
-
-        return new Resources<>(museos,
-                linkTo(methodOn(MuseoControlador.class).all()).withSelfRel());
+    List<Museo> all(){
+        return museoRepositorio.findAll();
     }
-
-//    @PostMapping("/museos")
-//    Museo nuevoMuseo(@RequestBody Museo nuevoMuseo) {
-//        return museoRepositorio.save(nuevoMuseo);
+//    @GetMapping("/museos")
+//    Resources<Resource<Museo>> all() {
+//
+//        List<Resource<Museo>> museos = museoRepositorio.findAll().stream()
+//                .map(ensamblador :: toResource)
+//                .collect(Collectors.toList());
+//
+//        return new Resources<>(museos,
+//                linkTo(methodOn(MuseoControlador.class).all()).withSelfRel());
 //    }
+
     @PostMapping("/museos")
-    ResponseEntity<?> nuevoMuseo(@RequestBody Museo museo) throws URISyntaxException {
-
-        Resource<Museo> resource = ensamblador.toResource(museoRepositorio.save(museo));
-
-        return ResponseEntity
-                .created(new URI(resource.getId().expand().getHref()))
-                .body(resource);
+    Museo nuevoMuseo(@RequestBody Museo nuevoMuseo) {
+        return museoRepositorio.save(nuevoMuseo);
     }
-
-
-//    @GetMapping("/museos/{id}")
-//    Museo one(@PathVariable Long id) {
+//    @PostMapping("/museos")
+//    ResponseEntity<?> nuevoMuseo(@RequestBody Museo museo) throws URISyntaxException {
 //
-//        return museoRepositorio.findById(id)
-//                .orElseThrow(() -> new MuseoNotFoundException(id));
+//        Resource<Museo> resource = ensamblador.toResource(museoRepositorio.save(museo));
+//
+//        return ResponseEntity
+//                .created(new URI(resource.getId().expand().getHref()))
+//                .body(resource);
 //    }
+
+
     @GetMapping("/museos/{id}")
-    Resource<Museo> obtenerMuseoPorId(@PathVariable Long id) {
+    Museo one(@PathVariable Long id) {
 
-        Museo museo = museoRepositorio.findById(id)
+        return museoRepositorio.findById(id)
                 .orElseThrow(() -> new MuseoNotFoundException(id));
-
-        return ensamblador.toResource(museo);
     }
-
-//    @PutMapping("/museos/{id}")
-//    Museo replaceEmployee(@RequestBody Museo nuevoMuseo, @PathVariable Long id) {
+//    @GetMapping("/museos/{id}")
+//    Resource<Museo> obtenerMuseoPorId(@PathVariable Long id) {
 //
-//        return museoRepositorio.findById(id)
-//                .map(museo -> {
-//                    museo.setDireccion(nuevoMuseo.getDireccion());
-//                    museo.setNombre(nuevoMuseo.getNombre());
-//                    return museoRepositorio.save(museo);
-//                })
-//                .orElseGet(() -> {
-//                    nuevoMuseo.setId(id);
-//                    return museoRepositorio.save(nuevoMuseo);
-//                });
+//        Museo museo = museoRepositorio.findById(id)
+//                .orElseThrow(() -> new MuseoNotFoundException(id));
+//
+//        return ensamblador.toResource(museo);
 //    }
-    @PutMapping("/museos/{id}")
-    ResponseEntity<?> remplazarMuseo(@RequestBody Museo nuevoMuseo, @PathVariable Long id) throws URISyntaxException {
 
-        Museo updatedEmployee = museoRepositorio.findById(id)
+    @PutMapping("/museos/{id}")
+    Museo replaceEmployee(@RequestBody Museo nuevoMuseo, @PathVariable Long id) {
+
+        return museoRepositorio.findById(id)
                 .map(museo -> {
-                    museo.setDireccion(museo.getDireccion());
-                    museo.setNombre(museo.getNombre());
+                    museo.setDireccion(nuevoMuseo.getDireccion());
+                    museo.setNombre(nuevoMuseo.getNombre());
                     return museoRepositorio.save(museo);
                 })
                 .orElseGet(() -> {
                     nuevoMuseo.setId(id);
                     return museoRepositorio.save(nuevoMuseo);
                 });
-
-        Resource<Museo> resource = ensamblador.toResource(updatedEmployee);
-
-        return ResponseEntity
-                .created(new URI(resource.getId().expand().getHref()))
-                .body(resource);
     }
-//    @DeleteMapping("/employees/{id}")
-//    void deleteEmployee(@PathVariable Long id) {
-//        museoRepositorio.deleteById(id);
+//    @PutMapping("/museos/{id}")
+//    ResponseEntity<?> remplazarMuseo(@RequestBody Museo nuevoMuseo, @PathVariable Long id) throws URISyntaxException {
+//
+//        Museo updatedEmployee = museoRepositorio.findById(id)
+//                .map(museo -> {
+//                    museo.setDireccion(museo.getDireccion());
+//                    museo.setNombre(museo.getNombre());
+//                    return museoRepositorio.save(museo);
+//                })
+//                .orElseGet(() -> {
+//                    nuevoMuseo.setId(id);
+//                    return museoRepositorio.save(nuevoMuseo);
+//                });
+//
+//        Resource<Museo> resource = ensamblador.toResource(updatedEmployee);
+//
+//        return ResponseEntity
+//                .created(new URI(resource.getId().expand().getHref()))
+//                .body(resource);
 //    }
-    @DeleteMapping("/museos/{id}")
-    ResponseEntity<?> eliminarMuseo(@PathVariable Long id) {
-
+    @DeleteMapping("/employees/{id}")
+    void eliminarMuseo(@PathVariable Long id) {
         museoRepositorio.deleteById(id);
-
-        return ResponseEntity.noContent().build();
     }
+//    @DeleteMapping("/museos/{id}")
+//    ResponseEntity<?> eliminarMuseo(@PathVariable Long id) {
+//
+//        museoRepositorio.deleteById(id);
+//
+//        return ResponseEntity.noContent().build();
+//    }
 
 }
