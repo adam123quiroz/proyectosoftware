@@ -61,7 +61,7 @@ public class MuseoControlador {
 
 
     @GetMapping("/museos/{id}")
-    Museo one(@PathVariable Long id) {
+    Museo obtenerMuseoPorId(@PathVariable Long id) {
 
         return museoRepositorio.findById(id)
                 .orElseThrow(() -> new MuseoNotFoundException(id));
@@ -76,7 +76,7 @@ public class MuseoControlador {
 //    }
 
     @PutMapping("/museos/{id}")
-    Museo replaceEmployee(@RequestBody Museo nuevoMuseo, @PathVariable Long id) {
+    Museo remplazarMuseo(@RequestBody Museo nuevoMuseo, @PathVariable Long id) {
 
         return museoRepositorio.findById(id)
                 .map(museo -> {
